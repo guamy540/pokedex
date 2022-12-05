@@ -1,49 +1,79 @@
 import './App.css';
 import { useState, useEffect } from 'react';
-import Results from './components/results';
+import { title } from './assets';
+import Results from './components/Result/results';
 import Foundvalue from './components/Foundvalue/foundvalue';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios';
 
 function App() {
-  let types = ['bug', 'dark', 'dragon', 'electric', 'fairy', 'fighting', 'fire', 
-  'flying', 'ghost', 'grass', 'ground', 'ice', 'normal', 'poison', 'psychic', 'rock', 'steel', 'water'] //all the types of pokemon
+  let types = ['All', 'Bug', 'Dark', 'Dragon', 'Electric', 'Fairy', 'Fighting', 'Fire', 
+  'Flying', 'Ghost', 'Grass', 'Ground', 'Ice', 'Normal', 'Poison', 'Psychic', 'Rock', 'Steel', 'Water'] //all the types of pokemon
 
   const [getUrl, setGetUrl] = useState("") //url that will be used for get request
-  const [pokemonFound, setPokemonFound] = useState(['charmander', 'squirtle', 'bulbasaur']) //starting pokemon
+  const [pokemonFound, setPokemonFound] = useState([]) //starting pokemon
   const [searchInput, setSearchInput] = useState("") //input from the search box
   const [numberFound, setNumberFound] = useState(0) //number of pokemon displayed
-  const [displayFoundvalue, setDisplayFoundvalue] = useState(true) 
-  const [filterType, setFilterType] = useState("")
+  const [displayFoundvalue, setDisplayFoundvalue] = useState(false) 
+  const [filterType, setFilterType] = useState("All")
+
+   function sortFilteredPokemon(res){ //this sort will be used if a sort is selected
+    setPokemonFound(res.data.pokemon.map(element => element.pokemon.name))
+    if (searchInput){
+      setPokemonFound(prevPokemon => prevPokemon.filter(p => p.includes(searchInput)))
+    }
+  }
+
+  function sortUnfilteredPokemon(res){  //this sort will be used if no filter is selected
+    setPokemonFound(res.data.results.map(p => p.name))
+    if (searchInput){
+      setPokemonFound(prevPokemon => prevPokemon.filter(p => p.includes(searchInput)))
+    }
+  }
 
   useEffect(()=>{
     setNumberFound(pokemonFound.length)
   },[pokemonFound]) //when pokemon found changes, change the number of results
 
+
   useEffect(() => {
     axios.get(getUrl).then(res => {
-      setPokemonFound(res.data.results.map(p => p.name))
-      if (searchInput){
-        setPokemonFound(prevPokemon => prevPokemon.filter(p => p.includes(searchInput)))
+      if(filterType == 'All'){
+        sortUnfilteredPokemon(res)
+      }else {
+        sortFilteredPokemon(res)
       }
     }) 
+    
   }, [getUrl, searchInput]) //if input or get request changes, show results
 
-  function clickTest(){
-    setGetUrl("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0")
+
+  function click(){
+    setDisplayFoundvalue(true)
+    if (filterType == 'All'){
+      setGetUrl("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0")
+    }else{
+      let url = "https://pokeapi.co/api/v2/type/" + filterType.toLowerCase()
+      console.log(url)
+      setGetUrl(url)
+    }
     setSearchInput(document.querySelector('#nameInput').value)
-  }  //when the user clicks magnifying glass, change URL/search input 
+  } //when the user clicks magnifying glass, change URL/search input 
+
+  function selectFilter(){
+    setFilterType(document.querySelector("#typeSelector").value)
+  }
 
   return (
     <div className="flex flex-col items-center p-4">
 
-      <div className='w-full text-center'>
-        <h1 className='text-4xl'>Title</h1>
+      <div className='flex align-center justify-center'>
+        <img src={title}></img>
       </div>
 
       
-      <div className='flex flex-col justify-center align-center p-4 bg-red-500 mt-12 rounded-xl w-80'>
+      <div className='flex flex-col justify-center align-center p-4 bg-red-500 mt-12 rounded-xl w-80'>  {/*This is the search input field and button to make the GET request*/}
         <div id='nameForm' className='flex flex-col justify-center align-center bg-red-500' onSubmit="return false;">
           <label className='bg-red-500 text-white'>Search for a pokemon:</label>
           <div className='flex justify-between'>
@@ -51,17 +81,20 @@ function App() {
           className='bg-white input[type=text] rounded-md border-gray-300 shadow-sm pl-3 py-2
           focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'>
           </input>
-          <button onClick={clickTest}>
+          <button onClick={click}>
             <FontAwesomeIcon icon={faMagnifyingGlass} className='text-white text-3xl'></FontAwesomeIcon>
           </button>
           </div>
         </div>
       </div>
 
-      <div id='filters' className='flex flex-wrap flex-row m-4 justify-center'>
-        {types.map((type) => {
-          return <button key={type} className='bg-neutral-900 w-24 m-4 text-center p-4 rounded-xl'><p className='text-white'>{type}</p></button>
-        })}
+      <div className='bg-white m-4 p-4'>  {/*This is the select drop down for types*/}
+        <label>Filter by types:  </label>
+          <select name="selectType" id="typeSelector" onChange={selectFilter}>
+            {types.map((type) => {
+              return <option value={type} key={type}>{type}</option>
+            })}
+          </select>
       </div>
 
       {displayFoundvalue? <Foundvalue number={numberFound}/> : null}
