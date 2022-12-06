@@ -86,7 +86,6 @@ function Results({pokemon, number}){
 
             </div>}
 
-
                 <motion.button whileHover={{scale: 1.1}} className='flex text-center bg-black p-4 rounded-xl justify-center text-white' onClick={goBack}>Go Back</motion.button>
         </motion.div>
         )

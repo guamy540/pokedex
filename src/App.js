@@ -1,7 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import { title } from './assets';
-import { Results, Loading, Foundvalue } from './components';
+import { Results, Loading} from './components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios';
