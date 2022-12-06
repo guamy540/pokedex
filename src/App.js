@@ -64,7 +64,7 @@ function App() {
       console.log(url)
       setGetUrl(url)
     }
-    setSearchInput(document.querySelector('#nameInput').value)
+    setSearchInput(document.querySelector('#nameInput').value.toLowerCase()) //database has all characters in lowercase, need to convert characters to lowercase
   } //when the user clicks magnifying glass, change URL/search input 
 
   useEffect(() => {
