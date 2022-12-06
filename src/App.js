@@ -103,7 +103,7 @@ function App() {
         <div id='nameForm' className='flex flex-col justify-center align-center bg-red-500' onSubmit="return false;">
           <label className='bg-red-500 text-white font-bold'>Search for a pokemon:</label>
           <div className='flex justify-between'>
-          <input id='nameInput' type='text' value="Input Search Here"
+          <input id='nameInput' type='text'
           className='bg-white input[type=text] rounded-md border-gray-300 shadow-sm pl-3 py-2
           focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'>
           </input>
