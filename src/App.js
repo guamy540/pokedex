@@ -94,20 +94,20 @@ function App() {
     <div className="flex flex-col items-center p-4">
 
       <div className='flex align-center justify-center'>
-        <img src={title}></img>
+        <img src={title} alt="Find Those Pokemon!"></img>
       </div>
 
       
       <div className='flex flex-col justify-center align-center p-4 
       bg-red-500 mt-12 rounded-xl w-80 shadow-xl' >  {/*This is the search input field and button to make the GET request*/}
         <div id='nameForm' className='flex flex-col justify-center align-center bg-red-500' onSubmit="return false;">
-          <label className='bg-red-500 text-white'>Search for a pokemon:</label>
+          <label className='bg-red-500 text-white font-bold'>Search for a pokemon:</label>
           <div className='flex justify-between'>
-          <input id='nameInput' type='text' 
+          <input id='nameInput' type='text' value="Input Search Here"
           className='bg-white input[type=text] rounded-md border-gray-300 shadow-sm pl-3 py-2
           focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'>
           </input>
-          <button onClick={click}>
+          <button onClick={click} value="search_button">
             <FontAwesomeIcon icon={faMagnifyingGlass} className='text-white text-3xl'></FontAwesomeIcon>
           </button>
           </div>
