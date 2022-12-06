@@ -1,8 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import { title } from './assets';
-import Results from './components/Result/results';
-import Foundvalue from './components/Foundvalue/foundvalue';
+import { Results, Loading, Foundvalue } from './components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios';
@@ -15,8 +14,11 @@ function App() {
   const [pokemonFound, setPokemonFound] = useState([]) //starting pokemon
   const [searchInput, setSearchInput] = useState("") //input from the search box
   const [numberFound, setNumberFound] = useState(0) //number of pokemon displayed
-  const [displayFoundvalue, setDisplayFoundvalue] = useState(false) 
-  const [filterType, setFilterType] = useState("All")
+  const [displayFoundvalue, setDisplayFoundvalue] = useState(false) //Number of results in a search, initially don't show the number of results since no search has been done
+  const [filterType, setFilterType] = useState("All") //type of Pokemon that results will filter, initially set to All types
+  const [didSearch, setDidSearch] = useState(false) //Used to determine if changing the option in the select field does a new search or not
+  const [isLoading, setLoading] = useState(false) //When true, show loading message
+  const [message, setMessage] = useState("") //no message initially is passed to the loading component so nothing will render until after first click
 
    function sortFilteredPokemon(res){ //this sort will be used if a sort is selected
     setPokemonFound(res.data.pokemon.map(element => element.pokemon.name))
@@ -38,19 +40,23 @@ function App() {
 
 
   useEffect(() => {
+    setLoading(true)
     axios.get(getUrl).then(res => {
       if(filterType == 'All'){
         sortUnfilteredPokemon(res)
+        setLoading(false)
       }else {
         sortFilteredPokemon(res)
+        setLoading(false)
       }
     }) 
-    
   }, [getUrl, searchInput]) //if input or get request changes, show results
 
 
   function click(){
+    setMessage("Loading...")
     setDisplayFoundvalue(true)
+    setDidSearch(true)
     if (filterType == 'All'){
       setGetUrl("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0")
     }else{
@@ -61,7 +67,11 @@ function App() {
     setSearchInput(document.querySelector('#nameInput').value)
   } //when the user clicks magnifying glass, change URL/search input 
 
-  function selectFilter(){
+  useEffect(() => {
+    if(didSearch) click()
+  }, [filterType]) //if one search has been done, change results everytime the dropdown selection changes
+
+  function selectFilter(){  //function for when the filter by types dropdown changes
     setFilterType(document.querySelector("#typeSelector").value)
   }
 
@@ -73,7 +83,8 @@ function App() {
       </div>
 
       
-      <div className='flex flex-col justify-center align-center p-4 bg-red-500 mt-12 rounded-xl w-80'>  {/*This is the search input field and button to make the GET request*/}
+      <div className='flex flex-col justify-center align-center p-4 
+      bg-red-500 mt-12 rounded-xl w-80 shadow-xl' >  {/*This is the search input field and button to make the GET request*/}
         <div id='nameForm' className='flex flex-col justify-center align-center bg-red-500' onSubmit="return false;">
           <label className='bg-red-500 text-white'>Search for a pokemon:</label>
           <div className='flex justify-between'>
@@ -88,19 +99,22 @@ function App() {
         </div>
       </div>
 
-      <div className='bg-white m-4 p-4'>  {/*This is the select drop down for types*/}
-        <label>Filter by types:  </label>
-          <select name="selectType" id="typeSelector" onChange={selectFilter}>
+      <div className='bg-black m-4 p-4 rounded-xl shadow-xl'>  {/*This is the select drop down for types*/}
+        <label className='mr-2 text-white'>Filter by types:  </label>
+          <select id="typeSelector" onChange={selectFilter}
+          className='rounded-md border-gray-300 shadow-sm
+          focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'>
             {types.map((type) => {
               return <option value={type} key={type}>{type}</option>
             })}
           </select>
       </div>
 
-      {displayFoundvalue? <Foundvalue number={numberFound}/> : null}
+
+      {displayFoundvalue && !isLoading? <Foundvalue number={numberFound}/> : null} {/*No reason to display before search is done, shows number of results after a search*/}
 
       
-      <Results pokemon={pokemonFound}/>
+      {isLoading? <Loading message={message}/> : <Results pokemon={pokemonFound}/> }{/*This shows the results of the search, showing every Pokemon by name found */}
 
     </div>
   );
