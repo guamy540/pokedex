@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/pokedex/static/css/main.619e84f1.css",
+    "main.js": "/pokedex/static/js/main.4d36b80e.js",
+    "static/media/title.png": "/pokedex/static/media/title.0e7729d9baf2c5c6848c.png",
+    "static/media/pokeballBlurBG.jpg": "/pokedex/static/media/pokeballBlurBG.576f9d33d0f747890a16.jpg",
+    "index.html": "/pokedex/index.html",
+    "main.619e84f1.css.map": "/pokedex/static/css/main.619e84f1.css.map",
+    "main.4d36b80e.js.map": "/pokedex/static/js/main.4d36b80e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.619e84f1.css",
+    "static/js/main.4d36b80e.js"
+  ]
+}
