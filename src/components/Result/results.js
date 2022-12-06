@@ -4,7 +4,7 @@ import {motion} from 'framer-motion'
 
 
 //This function shows the results of a search as well as displays a card showing a pokemons image/stats when they are clicked on
-function Results({pokemon, number}){
+function Results({pokemon, number, display}){
     const [pokemonImg, setPokemonImg] = useState('')
     const [selectedName, setSelectedName] = useState('') //this is the name that will show up on display when a result is clicked
     const [loading, setLoading] = useState(false)
@@ -96,16 +96,16 @@ function Results({pokemon, number}){
     }else {
     {/**show the results of the search */}    
     return(
-
+        
         <div
         className='flex flex-col justify-center align-center'>
             
-            <motion.div
+           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className='flex w-fit justify-center bg-white rounded-xl drop-shadow-xl border-2 border-black mb-6 place-self-center'>
-                    {number == -1? <h3 className='font-black p-4'> Network Error</h3> : <h3 className='font-black p-4'>{number} Pokemon found.</h3>}
+                    {number == -1? <h3 className='font-black p-4'>Results display below. </h3> : <h3 className='font-black p-4'>{number} Pokemon found.</h3>}
             </motion.div>
 
             <div className="flex flex-row flex-wrap justify-center align-center">    

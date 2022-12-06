@@ -13,7 +13,7 @@ function App() {
   const [getUrl, setGetUrl] = useState("") //url that will be used for get request
   const [pokemonFound, setPokemonFound] = useState([]) //starting pokemon
   const [searchInput, setSearchInput] = useState("") //input from the search box
-  const [numberFound, setNumberFound] = useState(0) //number of pokemon displayed
+  const [numberFound, setNumberFound] = useState(-1) //number of pokemon displayed
   const [displayFoundvalue, setDisplayFoundvalue] = useState(false) //Number of results in a search, initially don't show the number of results since no search has been done
   const [filterType, setFilterType] = useState("All") //type of Pokemon that results will filter, initially set to All types
   const [didSearch, setDidSearch] = useState(false) //Used to determine if changing the option in the select field does a new search or not
@@ -35,26 +35,29 @@ function App() {
   }
 
   useEffect(()=>{
-    setNumberFound(pokemonFound.length)
-  },[pokemonFound]) //when pokemon found changes, change the number of results
+    if(didSearch){              /**I want to wait until the first search is conducted to have useEffect begin */
+      setNumberFound(pokemonFound.length) 
+  }},[pokemonFound]) //when pokemon found changes, change the number of results
 
 
   useEffect(() => {
-    setLoading(true)
-    axios.get(getUrl).then(res => {
-      if(filterType == 'All'){
-        sortUnfilteredPokemon(res)
+    if(didSearch){             /**I want to wait until the first search is conducted to have useEffect begin */
+      setLoading(true)
+      axios.get(getUrl).then(res => {
+        if(filterType == 'All'){
+          sortUnfilteredPokemon(res)
+          setLoading(false)
+        }else {
+          sortFilteredPokemon(res)
+          setLoading(false)
+        }
+      }).catch(err => {
+        setNumberFound(-1)
+        alert("Network Error. Could not connect to database.")
+        console.log(err)
         setLoading(false)
-      }else {
-        sortFilteredPokemon(res)
-        setLoading(false)
-      }
-    }).catch(err => {
-      setNumberFound(-1)
-      console.log(err)
-      setLoading(false)
-    })
-  }, [getUrl, searchInput]) //if input or get request changes, show results
+      })
+  }}, [getUrl, searchInput]) //if input or get request changes, show results
 
 
   function click(){
@@ -77,6 +80,14 @@ function App() {
 
   function selectFilter(){  //function for when the filter by types dropdown changes
     setFilterType(document.querySelector("#typeSelector").value)
+  }
+
+  function checkDisplay(){
+    if (didSearch){
+      return <Results pokemon={pokemonFound} number={numberFound} />
+    }else{
+      return <div></div>
+    }
   }
 
   return (
@@ -114,7 +125,7 @@ function App() {
           </select>
       </div>
            
-      {isLoading? <Loading message={message}/> : <Results pokemon={pokemonFound} number={numberFound}/> }{/*This shows the results of the search, showing every Pokemon by name found */}
+      {isLoading? <Loading message={message}/> : <Results pokemon={pokemonFound} number={numberFound} /> }{/*This shows the results of the search, showing every Pokemon by name found */}
 
     </div>
   );
