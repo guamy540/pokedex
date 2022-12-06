@@ -4,7 +4,7 @@ import {motion} from 'framer-motion'
 
 
 //This function shows the results of a search as well as displays a card showing a pokemons image/stats when they are clicked on
-function Results({pokemon}){
+function Results({pokemon, number}){
     const [pokemonImg, setPokemonImg] = useState('')
     const [selectedName, setSelectedName] = useState('') //this is the name that will show up on display when a result is clicked
     const [loading, setLoading] = useState(false)
@@ -94,17 +94,30 @@ function Results({pokemon}){
     }else {
     {/**show the results of the search */}    
     return(
-        <div className="flex flex-row flex-wrap justify-center align-center">
-            {pokemon.map(p => (
-                <motion.button onClick={() => pokedex({p})} key={p} className=' flex w-36 justify-center align-center p-4 bg-red-500 m-4 
-                rounded-xl m-4 text-center drop-shadow-xl border-solid border-2 border-black text-white font-bold'
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                whileHover = {{scale: 1.3}}>
-                    {p[0].toUpperCase() + p.slice(1)}
-                </motion.button>
-            ))}            
+
+        <div
+        className='flex flex-col justify-center align-center'>
+            
+            <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className='flex w-fit justify-center bg-white rounded-xl drop-shadow-xl border-2 border-black mb-6 place-self-center'>
+                    <h3 className='font-black p-4'>{number} Pokemon found.</h3>
+            </motion.div>
+
+            <div className="flex flex-row flex-wrap justify-center align-center">    
+                {pokemon.map(p => (
+                    <motion.button onClick={() => pokedex({p})} key={p} className=' flex w-36 justify-center align-center p-4 bg-red-500 m-4 
+                    rounded-xl m-4 text-center drop-shadow-xl border-solid border-2 border-black text-white font-bold'
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    whileHover = {{scale: 1.3}}>
+                        {p[0].toUpperCase() + p.slice(1)}
+                    </motion.button>
+                ))}            
+            </div>
         </div>
     )
     }

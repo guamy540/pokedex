@@ -109,12 +109,8 @@ function App() {
             })}
           </select>
       </div>
-
-
-      {displayFoundvalue && !isLoading? <Foundvalue number={numberFound}/> : null} {/*No reason to display before search is done, shows number of results after a search*/}
-
-      
-      {isLoading? <Loading message={message}/> : <Results pokemon={pokemonFound}/> }{/*This shows the results of the search, showing every Pokemon by name found */}
+           
+      {isLoading? <Loading message={message}/> : <Results pokemon={pokemonFound} number={numberFound}/> }{/*This shows the results of the search, showing every Pokemon by name found */}
 
     </div>
   );
