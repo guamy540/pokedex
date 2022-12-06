@@ -49,7 +49,11 @@ function App() {
         sortFilteredPokemon(res)
         setLoading(false)
       }
-    }) 
+    }).catch(err => {
+      setNumberFound(-1)
+      console.log(err)
+      setLoading(false)
+    })
   }, [getUrl, searchInput]) //if input or get request changes, show results
 
 

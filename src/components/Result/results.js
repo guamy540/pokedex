@@ -25,7 +25,6 @@ function Results({pokemon, number}){
     //when the url changes, make a GET request and then set the appropriate variables
     useEffect(()=>{
         setLoading(true)
-        console.log(url)
         axios.get(url).then(res => {
             setPokemonImg(res.data.sprites.front_default)
             setHp(res.data.stats[0].base_stat)
@@ -36,6 +35,10 @@ function Results({pokemon, number}){
             setSpeed(res.data.stats[5].base_stat)
             console.log(res.data)
             setLoading(false)
+        }).catch(err => {
+            setSelectedName("NETWORK ERROR")
+            setLoading(false)
+            console.log(err)
         })
     }, [url])
 
@@ -102,7 +105,7 @@ function Results({pokemon, number}){
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className='flex w-fit justify-center bg-white rounded-xl drop-shadow-xl border-2 border-black mb-6 place-self-center'>
-                    <h3 className='font-black p-4'>{number} Pokemon found.</h3>
+                    {number == -1? <h3 className='font-black p-4'> Network Error</h3> : <h3 className='font-black p-4'>{number} Pokemon found.</h3>}
             </motion.div>
 
             <div className="flex flex-row flex-wrap justify-center align-center">    
