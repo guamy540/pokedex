@@ -83,7 +83,7 @@ function Results({pokemon, number, display}){
                 </div>
 
                 <div className="flex justify-center">   {/*display image if found, display message if no image available */}
-                    {pokemonImg? <motion.div whileHover={{scale: 2.0}} className='bg-white rounded-xl m-4'><img src={pokemonImg}></img></motion.div> 
+                    {pokemonImg? <motion.div whileHover={{scale: 2.0}} className='bg-white rounded-xl m-4'><img src={pokemonImg} alt="Pokemon Image"></img></motion.div> 
                     : <h2 className="text-white mb-4">Image not found</h2>} 
                 </div>
 
